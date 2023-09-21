@@ -5,13 +5,13 @@
 Юрий Петров
 
 # Классы
-class Chat \
+**class Chat** \
 void sendMessage() \
 int getUserIDrecipient() const \
 int getUserIDsender() const \
 string getMessage() const
 
-class User \
+**class User** \
 void setName(string name) \
 string getName() const \
 setLogin(string login) \
@@ -21,42 +21,42 @@ string getPassword() const \
 void setUserID() \
 void setUserIDManual(int ID) \
 int getUserID() const \
-void clear() \
+void clear()
 
-# Функции \
+# Функции
 // меню \
-void menu() \
-void menuHeader() \
-void menuAuth() \
+**void menu()** \
+**void menuHeader()** \
+**void menuAuth()** \
 // выход \
-void exitNow() \
+**void exitNow()** \
 // вход \
-void authorization() \
+**void authorization()** \
 // создание нового пользователя + личных сообщений (предустановленные) \
-void createNewUser() \
-void createTestMessage()
+**void createNewUser()** \
+**void createTestMessage()**
 // проверка на пароль ( 3 символа цифры и буквы) \
-bool checkNewPassword(string password) \
+**bool checkNewPassword(string password)** \
 // очистка консоли \
-void clearconsole() \
+**void clearconsole()** \
 // проверка есть ли пользователи зарегистрированные \
-bool checkExistUsersList() \
+**bool checkExistUsersList()** \
 // выход из авторизованных \
-void exitCurrentUser() \
+**void exitCurrentUser()** \
 // создвание тестовых пользователей \
-void createTestUsers() \
+**void createTestUsers()** \
 // отображение сколько пользователей сейчас зарегистрировано \
-void showUserList() \
+**void showUserList()** \
 // отображение информации о тестовых пользователях \
-void viewTestUsersInfo() \
+**void viewTestUsersInfo()** \
 // отправка сообщения пользователь --> пользователь \
-void sendMessage(int userIDrecipient) \
+**void sendMessage(int userIDrecipient)** \
 // отправка сообщения пользователь --> все \
-void sendMessage() \
+**void sendMessage()** \
 // проверка сообщений (для текущего пользователя) \
-void showCountMessageCurrentUser() \
+**void showCountMessageCurrentUser()** \
 // отображение моих сообщений \
-void showMyMessage()
+**void showMyMessage()**
 
 
 

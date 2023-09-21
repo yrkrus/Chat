@@ -1,8 +1,6 @@
 #include "Chat.h"
 #include <vector>
 
-
-
 extern std::vector<Chat> g_chat;			// список с чатом текущего пользователя (написать конкретному пользователю)
 
 Chat::Chat()

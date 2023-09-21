@@ -6,7 +6,6 @@
 
 using std::vector;
 
-
 extern vector<User> g_userslist;
 extern User g_currentUser;
 extern vector<Chat> g_chat;			

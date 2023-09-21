@@ -3,7 +3,6 @@
 #include <string>
 #include "User.h"
 
-
 class Chat 
 {
 public:

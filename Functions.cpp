@@ -433,9 +433,8 @@ void authorization()
 		cout << "> ";
 		
 		char choise;
+		cin >> choise;
 
-		cin >> choise;
-		cin >> choise;
 		if (choise == 'y')
 		{
 			authorization();
@@ -444,8 +443,6 @@ void authorization()
 		{
 			menu();
 		}
-		
-	
 
 	}
 }

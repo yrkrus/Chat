@@ -59,6 +59,10 @@ void clear()
 **void showMyMessage()**
 
 
+# Схема 
+![alt text](https://github.com/yrkrus/Chat/blob/main/scheme.jpg?raw=true)
+
+
 
 
 

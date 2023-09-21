@@ -33,7 +33,7 @@ public:
 
 
 private:	
-	int userID_;
+	int userID_ = 0;
 	std::string name_;			// имя пользователя
 	std::string login_;			// логин	
 	std::string password_;		// пароль (пока в явнов виде в будущем хэш)

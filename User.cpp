@@ -1,8 +1,10 @@
 #include "User.h"
 #include <vector>;
+#include "Chat.h"
 
 extern std::vector<User> g_userslist;		// список со всеми пользователями
 extern User g_currentUser;					// текущий авторизаванный пользователь
+
 
 User::User()
 {
@@ -57,7 +59,7 @@ std::string User::getPassword() const
 
 void User::setUserID()
 {
-	 userID_ = g_userslist.size();
+	userID_ = g_userslist.size();
 }
 
 void User::setUserIDManual(int ID)

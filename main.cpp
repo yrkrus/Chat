@@ -9,6 +9,7 @@ using std::vector;
 
 extern vector<User> g_userslist;
 extern User g_currentUser;
+extern vector<Chat> g_chat;			
 
 
 int main()
@@ -17,6 +18,8 @@ int main()
 	system("chcp 1251");
     
 	createTestUsers(); // тестовое создание пользователей	
+	createTestMessage();
+
 	menu();
 
 	return 0;	

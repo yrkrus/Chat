@@ -1,5 +1,6 @@
 #include "Functions.h"
 #include "User.h"
+#include "Chat.h"
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -7,21 +8,25 @@
 #include <cstdlib>
 
 
-bool DEBUG{ true };
-
 using std::vector;
 using std::cout;
 using std::string;
 using std::cin;
 
+bool const DEBUG{ true };
 
+
+// глобальные переменные 
 vector<User> g_userslist;
 User g_currentUser;
+vector<Chat> g_globalchat;
+vector<Chat> g_chat;
+
 
 
 void createTestUsers() 
 {
-	const int SIZE_USERS = 5;
+	const int SIZE_USERS = 7;
 	
 	for (int i = 0; i < SIZE_USERS; ++i) 
 	{
@@ -36,11 +41,24 @@ void createTestUsers()
 }
 
 
+void createTestMessage() 
+{
+	const int SIZE_USERS = 7;
+
+	for (int i = 0; i < SIZE_USERS; ++i)
+	{
+		Chat chat(i+1, i, "Привет как дела?");
+		Chat chat2(i+1, i, "Hello world!");
+
+		g_chat.push_back(chat);
+		g_chat.push_back(chat2);			
+	}
+}
+
+
 void showUserList()
 {
-	menuHeader();
-
-	string message;
+	menuHeader();	
 
 	for (size_t i = 0; i < g_userslist.size(); ++i) 
 	{
@@ -51,20 +69,95 @@ void showUserList()
 		else 
 		{
 			cout << "\t" << i + 1 << ". Написать [" << g_userslist[i].getName() << "] \n";
-		}
-		
+		}	
 		
 	}
 
 	cout << "\t"<<g_userslist.size() + 1 << ". Выход\n\n";
-	cout << "> ";
+	cout << "> ";	
 
-	int choise;	
+	int choise;
 	cin >> choise;
+		
+	do 
+	{	
+		if (choise > g_userslist.size() + 1 || choise <= 0)
+		{
+			cout << "Нет такой команды!\n" << "> ";
+			cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			cin >> choise;
+		}
+		else if (choise == g_userslist.size() + 1)
+		{
+			menuAuth();			
+		}
+		else {
+			sendMessage(choise);
+		}
 
-	cout << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "] --> " << g_userslist[choise-1].getName() <<"["<< g_userslist[choise - 1].getUserID() <<"]" << " : ";
+	} while (choise == g_userslist.size() + 1);	
 
-	cin >> message;
+}
+
+// отправка сообщения пользователь --> все
+void sendMessage() 
+{
+	string message;
+
+	cout << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "] --> " << "ВСЕМ" <<" : ";
+
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getline(cin, message, '\n');
+
+	Chat chat(-1,g_currentUser.getUserID(),message);
+	g_chat.push_back(chat);
+
+	// хотим еще одно отправить?
+	cout << "Отправить еще одно сообщение? n/y?\n> ";
+
+	char repeat;
+	cin >> repeat;
+
+	if (repeat != 'y')
+	{
+		showUserList();
+	}
+	else
+	{
+		sendMessage();
+	}
+}
+
+// отправка сообщения пользователь --> пользователь
+void sendMessage(int userIDrecipient)
+{
+	int &choise = userIDrecipient;
+	string message;	
+	
+	cout << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "] --> " << g_userslist[choise - 1].getName() << "[" << g_userslist[choise - 1].getUserID() << "]" << " : ";
+
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
+	getline(cin, message, '\n');
+
+	// отправим сообщение
+	Chat currentchat(choise-1, g_currentUser.getUserID(),message);
+	g_chat.push_back(currentchat);
+
+	// хотим еще одно отправить?
+	cout << "Отправить еще одно сообщение? n/y?\n> ";
+	
+	char repeat;
+	cin >> repeat;
+
+	if (repeat != 'y') 
+	{ 
+		showUserList(); 
+	}
+	else 
+	{
+		sendMessage(choise);
+	}
 }
 
 void exitCurrentUser()
@@ -80,21 +173,81 @@ void exitNow()
 void menuHeader()
 {
 	clearconsole();
+
+	if (DEBUG) { viewTestUsersInfo(); }
+
 	cout << "================ C H A T ================ \n\n";
 }
 
+
+// проверка сообщений (для текущего пользователя)
+void showCountMessageCurrentUser() 
+{
+	if (!g_chat.empty()) 
+	{
+		int countmessage = 0;
+		
+		for (size_t i = 0; i<g_chat.size(); ++i ) 
+		{
+			if (g_currentUser.getUserID() == g_chat[i].getUserIDrecipient() || g_chat[i].getUserIDrecipient() == -1)
+			{
+				countmessage++;
+			}
+		}
+	
+		if (countmessage > 0) 
+		{
+			cout << "Привет, " << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "]. Новых сообщений (" << countmessage << ")\n\n";
+			cout << "\t 0. Прочитать сообщения\n";
+		}
+		else 
+		{
+			cout << "Привет, " << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "]\n\n";
+		}		
+	}
+	else 
+	{
+		cout << "Привет, " << g_currentUser.getName() << "[" << g_currentUser.getUserID() << "]\n\n";
+	}
+	
+}
+
+// отображение моих сообщений
+void showMyMessage()
+{
+	menuHeader();
+	
+	for (size_t i = 0; i < g_chat.size(); ++i) 
+	{
+		if (g_currentUser.getUserID() == g_chat[i].getUserIDrecipient() || g_chat[i].getUserIDrecipient() == -1)
+		{
+			if (g_chat[i].getUserIDrecipient() == -1) 
+			{
+				cout << "ВСЕМ ("<<g_userslist[g_chat[i].getUserIDsender()].getName() << "[" << g_chat[i].getUserIDsender() << "]) : " << g_chat[i].getMessage() << "\n";
+			}
+			else 
+			{
+				cout << g_userslist[g_chat[i].getUserIDsender()].getName() << "[" << g_chat[i].getUserIDsender() << "]: " << g_chat[i].getMessage() << "\n";
+			}			
+			
+		}
+	}
+	cout << "\n\n";
+
+	system("pause");
+
+	menuAuth();
+}
 
 // менюшка после успешной авторизации
 void menuAuth()
 {
 	menuHeader();
 	
-	cout << "Привет, " << g_currentUser.getName() <<"["<<g_currentUser.getUserID()<<"]\n\n";
+	// проверка есть ли сообщения
+	showCountMessageCurrentUser();
+
 	
-	// debug сделать чтобы писалось сообщение если есть какие либо сообщения пока был не в сети
-
-
-
 	cout << "\t 1. Написать пользователю\n"
 		 << "\t 2. Написать всем пользователям (" <<g_userslist.size() << ") \n"
 		 << "\t 3. Выход\n";
@@ -109,17 +262,25 @@ void menuAuth()
 	{
 		switch (choise)
 		{ 
+		case 0: // есть сообщения (текущий пользователь) 
+			{
+			showMyMessage();
+			break;
+			}
 		case 1: // Написать пользователю
 			{
 			showUserList();
+			break;
 			}
 		case 2: // Написать всем пользователям 
 			{
-			
+			sendMessage();
+			break;
 			}
 		case 3:
 		{
 			exitnow = true;
+			break;
 		}
 		default:
 		{
@@ -134,11 +295,24 @@ void menuAuth()
 	exitCurrentUser();
 	menu();
 	return;
+}
 
+// отображение информации о тестовых пользователях
+void viewTestUsersInfo() 
+{	
+	cout << "Предустановленные пользователи: \n";
+
+	for (size_t i = 0; i < g_userslist.size(); ++i)
+	{
+		cout << "login: " << g_userslist[i].getLogin() << "\t" << "password: " << g_userslist[i].getPassword() << "\n";
+	}
+	
+	cout << "\n\n";
 }
 
 void menu()
 {
+	
 	menuHeader();
 	
 	int choise;
@@ -261,10 +435,17 @@ void authorization()
 		char choise;
 
 		cin >> choise;
-		if (choise != 'n')
+		cin >> choise;
+		if (choise == 'y')
 		{
 			authorization();
 		}
+		else 
+		{
+			menu();
+		}
+		
+	
 
 	}
 }

@@ -1,5 +1,3 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
 #include <string>
 
 // менюшка
@@ -13,8 +11,9 @@ void exitNow();
 // вход 
 void authorization();
 
-// создание нового пользователя
+// создание нового пользователя + личных сообщений (предустановленные)
 void createNewUser();
+void createTestMessage();
 
 // проверка на пароль ( 3 символа цифры и буквы)
 bool checkNewPassword(std::string password);
@@ -34,4 +33,19 @@ void createTestUsers();
 // отображение сколько пользователей сейчас зарегистрировано
 void showUserList();
 
-#endif
+// отображение информации о тестовых пользователях
+void viewTestUsersInfo();
+
+// отправка сообщения пользователь --> пользователь
+void sendMessage(int userIDrecipient);
+
+// отправка сообщения пользователь --> все
+void sendMessage();
+
+// проверка сообщений (для текущего пользователя)
+void showCountMessageCurrentUser();
+
+// отображение моих сообщений
+void showMyMessage();
+
+

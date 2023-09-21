@@ -1,11 +1,10 @@
 # Chat
 Итоговое решение по модулю "основные конструкции с++"
 
-Команда
+# Команда
 Юрий Петров
 
-Классы и функции
-
+# Классы
 class Chat \
 void sendMessage() \
 int getUserIDrecipient() const \
@@ -24,7 +23,7 @@ void setUserIDManual(int ID) \
 int getUserID() const \
 void clear() \
 
-функции \
+# Функции \
 // меню \
 void menu() \
 void menuHeader() \
